@@ -151,7 +151,7 @@ RUN apt update && \
     g++ \
     pkg-config \
     htop \
-    tree \
+    tree && \
     rm -rf /var/lib/apt/lists/*
 
 # Create an entrypoint for setting up the environment
