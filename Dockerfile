@@ -53,8 +53,7 @@ RUN wget -O openvino.tgz https://storage.openvinotoolkit.org/repositories/openvi
     tar -xvf openvino.tgz && rm openvino.tgz && \
     mkdir -p ${OPENVINO_INSTALL_DIR} && \
     mv openvino_toolkit_ubuntu24_${OPENVINO_TAG}/* ${OPENVINO_INSTALL_DIR}/ && \
-    rm -rf openvino_toolkit_ubuntu24_${OPENVINO_TAG} && \
-    ${OPENVINO_INSTALL_DIR}/install_dependencies/install_openvino_dependencies.sh
+    rm -rf openvino_toolkit_ubuntu24_${OPENVINO_TAG}
 
 # Install ONNX Runtime
 RUN wget -O onnx.tgz "https://github.com/microsoft/onnxruntime/releases/download/v${ONNX_VERSION}/onnxruntime-linux-x64-${ONNX_VERSION}.tgz" && \
