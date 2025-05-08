@@ -139,7 +139,20 @@ RUN apt update && \
     python3-numpy \
     libtbb12 \
     libprotobuf32t64 && \
-    ${OPENVINO_INSTALL_DIR}/install_dependencies/install_openvino_dependencies.sh && \
+    libusb-1.0-0 \
+    libudev1 \
+    git \
+    vim \
+    gdb \
+    cmake \
+    make \
+    ninja-build \
+    gcc \
+    g++ \
+    pkg-config \
+    htop \
+    tree \
+    sudo \
     rm -rf /var/lib/apt/lists/*
 
 # Create an entrypoint for setting up the environment
