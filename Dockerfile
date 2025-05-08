@@ -14,6 +14,7 @@ ENV ONNX_ROOT_DIR="/opt/onnxruntime"
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
     wget \
+    ca-certificates \
     unzip \
     cmake \
     ninja-build \
