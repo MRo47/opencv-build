@@ -138,7 +138,7 @@ RUN apt update && \
     python3 \
     python3-numpy \
     libtbb12 \
-    libprotobuf32t64 && \
+    libprotobuf32t64 \
     libusb-1.0-0 \
     libudev1 \
     git \
@@ -152,11 +152,10 @@ RUN apt update && \
     pkg-config \
     htop \
     tree \
-    sudo \
     rm -rf /var/lib/apt/lists/*
 
 # Create an entrypoint for setting up the environment
-RUN cat <<EOF > /usr/local/bin/docker-entrypoint.sh
+RUN cat <<EOF > test
 #!/bin/bash
 set -e
 
