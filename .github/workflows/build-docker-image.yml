@@ -2,19 +2,23 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: [main] # Trigger on pushes to the main branch
+    branches: [test] # Trigger on pushes to the main branch
   workflow_dispatch: # Allow manual triggering
 
 jobs:
   build:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner
 
+    permissions:
+      contents: read # Needed to checkout code
+      packages: write # Needed to push to GHCR
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4 # Action to check out your code
 
       - name: Set lowercase repository name
-        id: lowercase_repo # Give this step an ID
+        id: lowercase_repo
         run: echo "LOWER_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
@@ -34,7 +38,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ env.LOWER_REPO }}:latest
+            ghcr.io/${{ env.LOWER_REPO }}:test
             ghcr.io/${{ env.LOWER_REPO }}:${{ github.sha }}
           cache-from: type=gha,scope=${{ env.LOWER_REPO }} # Use environment variable for cache scope
           cache-to: type=gha,mode=max,scope=${{ env.LOWER_REPO }} # Use environment variable
