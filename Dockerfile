@@ -60,7 +60,8 @@ RUN wget -O onnx.tgz "https://github.com/microsoft/onnxruntime/releases/download
     tar -xvf onnx.tgz && rm onnx.tgz && \
     mkdir -p ${ONNX_ROOT_DIR} && \
     mv "onnxruntime-linux-x64-${ONNX_VERSION}"/* ${ONNX_ROOT_DIR}/ && \
-    rm -rf "onnxruntime-linux-x64-${ONNX_VERSION}"
+    rm -rf "onnxruntime-linux-x64-${ONNX_VERSION}" && \
+    bash -x ${OPENVINO_INSTALL_DIR}/install_dependencies/install_openvino_dependencies.sh -y
 
 # Handle potential LAPACK symlink issue for OPENCV: https://github.com/opencv/opencv/issues/12957
 # Check if the target file exists before creating the symlink
@@ -138,37 +139,37 @@ RUN apt update && \
     python3 \
     python3-numpy \
     libtbb12 \
-    libprotobuf32t64 \
-    libusb-1.0-0 \
-    libudev1 \
-    git \
-    vim \
-    gdb \
-    cmake \
-    make \
-    ninja-build \
-    gcc \
-    g++ \
-    pkg-config \
-    htop \
-    tree && \
+    libprotobuf32t64 && \
+    bash -x /opt/intel/openvino_2025.1/install_dependencies/install_openvino_dependencies.sh -y && \
     rm -rf /var/lib/apt/lists/*
 
 # Create an entrypoint for setting up the environment
-RUN cat <<EOF > /usr/local/bin/docker-entrypoint.sh
+RUN cat <<'EOF' > /usr/local/bin/docker-entrypoint.sh
 #!/bin/bash
 set -e
 
 # Find Python site-packages path in the runtime image to set PYTHONPATH
-SYSTEM_PYTHON_SITE=\$(python3 -c "import site; print(site.getsitepackages()[0])")
-export PYTHONPATH=\$SYSTEM_PYTHON_SITE:\$PYTHONPATH
+SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
+export PYTHONPATH=$SYSTEM_PYTHON_SITE:$PYTHONPATH
 
-source "${OPENVINO_INSTALL_DIR}/setupvars.sh"
+# Find opencv site-packages path in the runtime image to set PYTHONPATH
+OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)
+export PYTHONPATH=$OPENCV_PYTHON_SITE:$PYTHONPATH
+
+# Source the OpenVINO setup
+source "${OPENVINO_INSTALL_DIR}/setupvars.sh" || exit 1
+
 # Add OpenCV libs to LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:\$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:$LD_LIBRARY_PATH
 
-# Execute the main command
-exec "\$@"
+echo "Entrypoint ready, running: $@"
+
+# Check if any arguments were passed
+if [ $# -eq 0 ]; then
+    exec /bin/bash
+else
+    exec "$@"
+fi
 EOF
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
@@ -178,4 +179,4 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 WORKDIR /app
 
 # Example command
-CMD ["bash"]
+CMD ["/bin/bash"]
