@@ -41,7 +41,7 @@ ONNX_ROOT_DIR="/opt/onnxruntime"
 
 wget -O onnx.tgz "https://github.com/microsoft/onnxruntime/releases/download/v${ONNX_VERSION}/onnxruntime-linux-x64-${ONNX_VERSION}.tgz"
 tar -xvf onnx.tgz
-mv "onnxruntime-linux-x64-${ONNX_VERSION}" ${ONNX_ROOT_DIR}
+sudo mv "onnxruntime-linux-x64-${ONNX_VERSION}" ${ONNX_ROOT_DIR}
 
 ### end onnx install
 
@@ -60,7 +60,12 @@ sudo apt install -y \
     libavutil-dev \
     libswscale-dev \
     libswresample-dev \
-    libgtk-3-dev
+    libgtk-3-dev \
+    libeigen3-dev \
+    libtbb-dev \
+    libprotobuf-dev \
+    python3-dev \
+    python3-numpy
 
 # lapack path issue https://github.com/opencv/opencv/issues/12957
 # sudo ln -s /usr/include/lapacke.h /usr/include/x86_64-linux-gnu
@@ -70,9 +75,9 @@ if [ -f /usr/include/x86_64-linux-gnu/cblas.h ]; then
     sudo ln -s /usr/include/x86_64-linux-gnu/cblas.h /usr/include/cblas.h
 fi
 
-mkdir -p build && cd build
-
 OPENCV_INSTALL_PATH="/opt/opencv-${OPENCV_VERSION}"
+
+mkdir -p build && cd build
 
 ### Configure build
 
@@ -109,11 +114,7 @@ cmake \
     -DWITH_PROTOBUF=ON \
     -DBUILD_opencv_python3=ON \
     -DBUILD_UNGUI_PYTHON=ON \
-    -DPYTHON3_EXECUTABLE=${PYTHON3_EXECUTABLE} \
-    -DPYTHON3_INCLUDE_DIR=${PYTHON3_INCLUDE_DIR} \
-    -DPYTHON3_LIBRARY=${PYTHON3_LIBRARY} \
-    -DPYTHON3_PACKAGES_PATH=${PYTHON3_PACKAGES_PATH} \
-    -DBUILD_DOCS=ON \
+    -DBUILD_DOCS=OFF \
     -DBUILD_opencv_apps=OFF \
     -DBUILD_EXAMPLES=OFF \
     -DBUILD_TESTS=OFF \
@@ -124,7 +125,7 @@ cmake \
     -DWITH_LAPACK=ON \
     -DWITH_GTK=ON \
     -DBUILD_NEW_PYTHON_SUPPORT=ON \
-    -DCMAKE_PREFIX_PATH="/opt/onnxruntime;/usr" \
+    -DCMAKE_PREFIX_PATH="${ONNX_ROOT_DIR};${OPENVINO_INSTALL_DIR};/usr" \
     -DBUILD_opencv_gapi=OFF \
     ../opencv-${OPENCV_VERSION}
 
@@ -141,5 +142,6 @@ elif [ "$(basename "$0")" = "bash" ]; then
     SHELLRC=~/.bashrc
 fi
 
-echo 'export LD_LIBRARY_PATH="'"${OPENCV_INSTALL_PATH}/lib"':$LD_LIBRARY_PATH"' >> $SHELLRC
+echo "export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:\$LD_LIBRARY_PATH" >> "$SHELLRC"
+echo "source ${OPENVINO_INSTALL_DIR}/setupvars.sh" >> "$SHELLRC"
 source $SHELLRC
