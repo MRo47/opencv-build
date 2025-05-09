@@ -164,21 +164,18 @@ SYSTEM_PYTHON_SITE=\$(python3 -c "import site; print(site.getsitepackages()[0])"
 export PYTHONPATH=\$SYSTEM_PYTHON_SITE:\$PYTHONPATH
 
 source "${OPENVINO_INSTALL_DIR}/setupvars.sh"
-# Add OpenCV libs to LD_LIBRARY_PATH if not already added by setupvars (unlikely)
+# Add OpenCV libs to LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:\$LD_LIBRARY_PATH
 
 # Execute the main command
 exec "\$@"
 EOF
 
-# Make the entrypoint script executable
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Set the entrypoint for the container
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-# Set the working directory
 WORKDIR /app
 
-# Example command - you can change this to run your application
+# Example command
 CMD ["bash"]
