@@ -155,7 +155,7 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create an entrypoint for setting up the environment
-RUN cat <<EOF > test
+RUN cat <<EOF > /usr/local/bin/docker-entrypoint.sh
 #!/bin/bash
 set -e
 
