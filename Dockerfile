@@ -155,11 +155,17 @@ RUN apt update && \
 RUN SCRIPT_FILE="/etc/profile.d/opencv_env.sh" && \
     echo '#!/bin/bash' > "${SCRIPT_FILE}" && \
     echo 'set -e' >> "${SCRIPT_FILE}" && \
+    echo '--- Debug: Before SYSTEM_PYTHON_SITE ---' >> "${SCRIPT_FILE}" && \
     echo 'SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")' >> "${SCRIPT_FILE}" && \
+    echo '--- Debug: Before OPENCV_PYTHON_SITE ---' >> "${SCRIPT_FILE}" && \
     echo 'OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)' >> "${SCRIPT_FILE}" && \
+    echo '--- Debug: Before export PYTHONPATH ---' >> "${SCRIPT_FILE}" && \
     echo 'export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}' >> "${SCRIPT_FILE}" && \
+    echo '--- Debug: Before source setupvars.sh ---' >> "${SCRIPT_FILE}" && \
     echo 'source "${OPENVINO_INSTALL_DIR}/setupvars.sh" || return 1' >> "${SCRIPT_FILE}" && \
+    echo '--- Debug: Before export LD_LIBRARY_PATH ---' >> "${SCRIPT_FILE}" && \
     echo 'export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}' >> "${SCRIPT_FILE}" && \
+    echo '--- Debug: End of script ---' >> "${SCRIPT_FILE}" && \
     chmod +x "${SCRIPT_FILE}"
 
 # Create an entrypoint script
