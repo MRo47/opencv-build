@@ -152,14 +152,15 @@ RUN apt update && \
     bash -x /opt/intel/openvino_2025.1/install_dependencies/install_openvino_dependencies.sh -y && \
     rm -rf /var/lib/apt/lists/*
 
-ENV SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
-ENV OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)
-ENV PYTHONPATH=$SYSTEM_PYTHON_SITE:$OPENCV_PYTHON_SITE:$PYTHONPATH
-ENV LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:$LD_LIBRARY_PATH
-
-# Set up environment variables in profile.d
-RUN echo '#!/bin/bash\nsource "${OPENVINO_INSTALL_DIR}/setupvars.sh" || return 1' > /etc/profile.d/opencv_env.sh && \
-    chmod +x /etc/profile.d/opencv_env.sh
+RUN SCRIPT_FILE="/etc/profile.d/opencv_env.sh" && \
+    echo '#!/bin/bash' > "${SCRIPT_FILE}" && \
+    echo 'set -e' >> "${SCRIPT_FILE}" && \
+    echo 'SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")' >> "${SCRIPT_FILE}" && \
+    echo 'OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)' >> "${SCRIPT_FILE}" && \
+    echo 'export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}' >> "${SCRIPT_FILE}" && \
+    echo 'source "${OPENVINO_INSTALL_DIR}/setupvars.sh" || return 1' >> "${SCRIPT_FILE}" && \
+    echo 'export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}' >> "${SCRIPT_FILE}" && \
+    chmod +x "${SCRIPT_FILE}"
 
 # Create an entrypoint script
 RUN echo '#!/bin/bash\nset -e\nsource /etc/profile.d/opencv_env.sh\nexec "$@"' > /usr/local/bin/docker-entrypoint.sh && \
