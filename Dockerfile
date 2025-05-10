@@ -161,7 +161,11 @@ export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}
 source "${OPENVINO_INSTALL_DIR}/setupvars.sh" || return 1
 export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}
 
-exec "$@"
+if [ $# -eq 0 ]; then
+    exec /bin/bash
+else
+    exec "$@"
+fi
 EOF
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
