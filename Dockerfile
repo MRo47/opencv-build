@@ -109,8 +109,7 @@ RUN /bin/bash -c ' \
         -DBUILD_opencv_gapi=OFF \
         /app/opencv-${OPENCV_VERSION} && \
     ninja -j$(nproc) && \
-    ninja install
-'
+    ninja install'
 
 # Stage 2: Runtime
 FROM ubuntu:24.04
