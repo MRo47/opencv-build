@@ -158,7 +158,9 @@ SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
 OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)
 export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}
 source "${OPENVINO_INSTALL_DIR}/setupvars.sh"
+echo "vars set up successfully"
 export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}
+echo "LD_LIBRARY_PATH set up successfully"
 EOF
 
 RUN chmod +x /etc/profile.d/opencv_env.sh
