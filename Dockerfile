@@ -33,6 +33,8 @@ RUN apt update && \
     libeigen3-dev \
     ffmpeg \
     intel-opencl-icd \
+    libva-dev \
+    libmfx-dev \
     python3 \
     python3-dev \
     python3-numpy \
@@ -71,7 +73,8 @@ RUN if [ -f /usr/include/x86_64-linux-gnu/cblas.h ]; then \
 
 # Configure, build, and install OpenCV
 WORKDIR /app/build
-RUN . ${OPENVINO_INSTALL_DIR}/setupvars.sh && \
+RUN /bin/bash -c ' \
+    source "${OPENVINO_INSTALL_DIR}/setupvars.sh" && \
     cmake \
         -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
@@ -95,6 +98,9 @@ RUN . ${OPENVINO_INSTALL_DIR}/setupvars.sh && \
         -DBUILD_PERF_TESTS=OFF \
         -DWITH_OPENMP=ON \
         -DWITH_TBB=ON \
+        -DWITH_VA=ON \
+        -DWITH_VA_INTEL=ON \
+        -DWITH_MFX=ON \
         -DWITH_EIGEN=ON \
         -DWITH_LAPACK=ON \
         -DWITH_GTK=ON \
@@ -104,6 +110,7 @@ RUN . ${OPENVINO_INSTALL_DIR}/setupvars.sh && \
         /app/opencv-${OPENCV_VERSION} && \
     ninja -j$(nproc) && \
     ninja install
+'
 
 # Stage 2: Runtime
 FROM ubuntu:24.04
@@ -139,6 +146,9 @@ RUN apt update && \
     python3 \
     python3-numpy \
     libtbb12 \
+    libva2 \
+    libmfx1 \
+    libwebpdemux2 \
     libprotobuf32t64 && \
     bash -x /opt/intel/openvino_2025.1/install_dependencies/install_openvino_dependencies.sh -y && \
     rm -rf /var/lib/apt/lists/*
