@@ -154,7 +154,6 @@ RUN apt update && \
 
 RUN cat <<'EOF' > /etc/profile.d/opencv_env.sh
 #!/bin/bash
-set -e
 SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
 OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)
 export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}
