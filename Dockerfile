@@ -164,6 +164,17 @@ EOF
 
 RUN chmod +x /etc/profile.d/opencv_env.sh
 
+RUN cat <<'EOF' > /usr/local/bin/docker-entrypoint.sh
+#!/bin/bash
+set -e
+source /etc/profile.d/opencv_env.sh
+exec "$@"
+EOF
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
 WORKDIR /app
 
 # Example command
