@@ -158,7 +158,7 @@ set -e
 SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
 OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)
 export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}
-source "${OPENVINO_INSTALL_DIR}/setupvars.sh" || return 1
+source "${OPENVINO_INSTALL_DIR}/setupvars.sh"
 export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}
 EOF
 
