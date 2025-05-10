@@ -152,28 +152,19 @@ RUN apt update && \
     bash -x /opt/intel/openvino_2025.1/install_dependencies/install_openvino_dependencies.sh -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN cat <<'EOF' > /etc/profile.d/opencv_env.sh
-#!/bin/bash
-set -e
-SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])")
-OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null)
+RUN cat <<'EOF' > /tmp/opencv_env_setup.sh
+# OpenCV and OpenVINO environment setup
+SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])" 2>/dev/null || echo "")
+OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null || echo "")
 export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}
-source "${OPENVINO_INSTALL_DIR}/setupvars.sh" || return 1
+source "${OPENVINO_INSTALL_DIR}/setupvars.sh" 2>/dev/null || true
 export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}
 EOF
 
-RUN chmod +x /etc/profile.d/opencv_env.sh
-
-RUN cat <<'EOF' > /usr/local/bin/docker-entrypoint.sh
-#!/bin/bash
-set -e
-source /etc/profile.d/opencv_env.sh
-exec "$@"
-EOF
-
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+# Add file in bashrc of default ubuntu user and root user
+RUN cat /tmp/opencv_env_setup.sh >> /home/ubuntu/.bashrc && \
+    cat /tmp/opencv_env_setup.sh >> /root/.bashrc && \
+    rm /tmp/opencv_env_setup.sh
 
 WORKDIR /app
 
