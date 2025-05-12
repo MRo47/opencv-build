@@ -152,19 +152,23 @@ RUN apt update && \
     bash -x /opt/intel/openvino_2025.1/install_dependencies/install_openvino_dependencies.sh -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN cat <<'EOF' > /tmp/opencv_env_setup.sh
-# OpenCV and OpenVINO environment setup
-SYSTEM_PYTHON_SITE=$(python3 -c "import site; print(site.getsitepackages()[0])" 2>/dev/null || echo "")
-OPENCV_PYTHON_SITE=$(find "${OPENCV_INSTALL_PATH}" -name "cv2" -prune -exec dirname {} \; 2>/dev/null || echo "")
-export PYTHONPATH=${SYSTEM_PYTHON_SITE}:${OPENCV_PYTHON_SITE}:${PYTHONPATH}
-source "${OPENVINO_INSTALL_DIR}/setupvars.sh" 2>/dev/null || true
-export LD_LIBRARY_PATH=${OPENCV_INSTALL_PATH}/lib:${LD_LIBRARY_PATH}
-EOF
+# openvino env vars set by setupvars.sh
+ENV INTEL_OPENVINO_DIR="${OPENVINO_INSTALL_DIR}"
+ENV OpenVINO_DIR="${INTEL_OPENVINO_DIR}/runtime/cmake"
+ARG OV_SYSTEM_ARCH="x86_64"
+ENV OV_PLUGINS_PATH="${INTEL_OPENVINO_DIR}/runtime/lib/${OV_SYSTEM_ARCH}"
+ENV LD_LIBRARY_PATH="${OV_PLUGINS_PATH}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PKG_CONFIG_PATH="${OV_PLUGINS_PATH}/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
+ARG TBB_LIB_PATH="${INTEL_OPENVINO_DIR}/runtime/3rdparty/tbb/lib/${OV_SYSTEM_ARCH}"
+ENV LD_LIBRARY_PATH="${TBB_LIB_PATH}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV TBB_DIR="${INTEL_OPENVINO_DIR}/runtime/3rdparty/tbb/lib/cmake/tbb"
+ARG OV_PYTHON_DIR="${INTEL_OPENVINO_DIR}/python"
+ENV PYTHONPATH="${OV_PYTHON_DIR}${PYTHONPATH:+:${PYTHONPATH}}"
 
-# Add file in bashrc of default ubuntu user and root user
-RUN cat /tmp/opencv_env_setup.sh >> /home/ubuntu/.bashrc && \
-    cat /tmp/opencv_env_setup.sh >> /root/.bashrc && \
-    rm /tmp/opencv_env_setup.sh
+# opencv env vars
+ARG OPENCV_PYTHON_SITE="/opt/opencv-4.11.0/lib/python3.12/dist-packages"
+ENV PYTHONPATH="${OPENCV_PYTHON_SITE}${PYTHONPATH:+:${PYTHONPATH}}"
+ENV LD_LIBRARY_PATH="${OPENCV_INSTALL_PATH}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
 WORKDIR /app
 
