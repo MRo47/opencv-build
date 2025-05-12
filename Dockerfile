@@ -162,17 +162,18 @@ ARG COMPILER_DEB="intel-driver-compiler-npu.deb"
 ARG L0_NPU_DEB="intel-level-zero-npu.deb"
 ARG L0_DEB="level-zero.deb"
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends libtbb12 && \
-    wget --progress=dot:giga -O "${COMPILER_DEB}" "${COMPILER_URL}" && \
-    wget --progress=dot:giga -O "${L0_NPU_DEB}" "${L0_NPU_URL}" && \
-    wget --progress=dot:giga -O "${L0_DEB}" "${L0_URL}" && \
+RUN /bin/bash -c -x ' \
+    apt update && \
+    apt install -y --no-install-recommends libtbb12 && \
+    wget -O "${COMPILER_DEB}" "${COMPILER_URL}" && \
+    wget -O "${L0_NPU_DEB}" "${L0_NPU_URL}" && \
+    wget -O "${L0_DEB}" "${L0_URL}" && \
     dpkg -i "${L0_DEB}" && \
     dpkg -i "${COMPILER_DEB}" "${L0_NPU_DEB}" && \
-    apt-get install -y --fix-broken --no-install-recommends && \
+    apt install -y --fix-broken --no-install-recommends && \
     rm -f "${COMPILER_DEB}" "${L0_NPU_DEB}" "${L0_DEB}" && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*'
 
 # openvino env vars set by setupvars.sh
 ENV INTEL_OPENVINO_DIR="${OPENVINO_INSTALL_DIR}"
