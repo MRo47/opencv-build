@@ -152,6 +152,28 @@ RUN apt update && \
     bash -x /opt/intel/openvino_2025.1/install_dependencies/install_openvino_dependencies.sh -y && \
     rm -rf /var/lib/apt/lists/*
 
+# install NPU dependencies
+ARG COMPILER_URL=https://github.com/intel/linux-npu-driver/releases/download/v1.17.0/intel-driver-compiler-npu_1.17.0.20250508-14912879441_ubuntu24.04_amd64.deb
+ARG L0_NPU_URL=https://github.com/intel/linux-npu-driver/releases/download/v1.17.0/intel-level-zero-npu_1.17.0.20250508-14912879441_ubuntu24.04_amd64.deb
+ARG L0_URL=https://github.com/oneapi-src/level-zero/releases/download/v1.21.9/level-zero_1.21.9+u24.04_amd64.deb
+
+# Define temporary filenames for downloaded packages
+ARG COMPILER_DEB="intel-driver-compiler-npu.deb"
+ARG L0_NPU_DEB="intel-level-zero-npu.deb"
+ARG L0_DEB="level-zero.deb"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libtbb12 && \
+    wget --progress=dot:giga -O "${COMPILER_DEB}" "${COMPILER_URL}" && \
+    wget --progress=dot:giga -O "${L0_NPU_DEB}" "${L0_NPU_URL}" && \
+    wget --progress=dot:giga -O "${L0_DEB}" "${L0_URL}" && \
+    dpkg -i "${L0_DEB}" && \
+    dpkg -i "${COMPILER_DEB}" "${L0_NPU_DEB}" && \
+    apt-get install -y --fix-broken --no-install-recommends && \
+    rm -f "${COMPILER_DEB}" "${L0_NPU_DEB}" "${L0_DEB}" && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # openvino env vars set by setupvars.sh
 ENV INTEL_OPENVINO_DIR="${OPENVINO_INSTALL_DIR}"
 ENV OpenVINO_DIR="${INTEL_OPENVINO_DIR}/runtime/cmake"
