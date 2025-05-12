@@ -164,7 +164,7 @@ ARG L0_DEB="level-zero.deb"
 
 RUN /bin/bash -c -x ' \
     apt update && \
-    apt install -y --no-install-recommends libtbb12 && \
+    apt install -y --no-install-recommends wget ca-certificates libtbb12 && \
     wget -O "${COMPILER_DEB}" "${COMPILER_URL}" && \
     wget -O "${L0_NPU_DEB}" "${L0_NPU_URL}" && \
     wget -O "${L0_DEB}" "${L0_URL}" && \
