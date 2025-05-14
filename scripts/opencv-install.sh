@@ -226,15 +226,4 @@ echo ">>> python3 -c 'import onnxruntime; print(onnxruntime.__version__)'"
 echo ""
 echo ">>> Temporary build files are in ${BUILD_DIR}. You can remove this directory manually if desired:"
 echo ">>> sudo rm -rf ${BUILD_DIR}"
-echo ">>> Script finished."
-
-    
-
-IGNORE_WHEN_COPYING_START
-
-
-source "${OPENVINO_INSTALL_DIR}/setupvars.sh"
-export PYTHONPATH=${OPENCV_PYTHON_SITE}:${PYTHONPATH}
-export LD_LIBRARY_PATH="${OPENCV_INSTALL_PATH}/lib":${LD_LIBRARY_PATH}
-export PKG_CONFIG_PATH="${OPENCV_INSTALL_PATH}/lib/pkgconfig":${PKG_CONFIG_PATH}
-export ONNX_ROOT_DIR=${ONNX_ROOT_DIR}
+echo ">>> Completed installation"
