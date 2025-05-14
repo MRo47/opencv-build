@@ -193,6 +193,18 @@ ARG OPENCV_PYTHON_SITE="/opt/opencv-4.11.0/lib/python3.12/dist-packages"
 ENV PYTHONPATH="${OPENCV_PYTHON_SITE}${PYTHONPATH:+:${PYTHONPATH}}"
 ENV LD_LIBRARY_PATH="${OPENCV_INSTALL_PATH}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 
+# remove sudo requirement for ubuntu user
+RUN apt update && \
+    apt install -y sudo && \
+    rm -rf /var/lib/apt/lists/* && \
+    (getent group ubuntu || groupadd -r ubuntu) && \
+    (id -u ubuntu || useradd -r -g ubuntu -G sudo -s /bin/bash -m -d /home/ubuntu ubuntu)
+
+# Configure sudo for no password for the 'ubuntu' user
+RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-nopasswd-ubuntu && \
+    chmod 0440 /etc/sudoers.d/90-nopasswd-ubuntu
+
+USER ubuntu
 WORKDIR /app
 
 # Example command
