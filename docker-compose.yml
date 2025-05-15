@@ -1,0 +1,22 @@
+services:
+  opencv_dev:
+    image: ghcr.io/mro47/opencv-build:latest
+    stdin_open: true
+    tty: true
+    network_mode: host
+    devices:
+      - "/dev/video0:/dev/video0" # for web cam
+      - "/dev/accel/accel0:/dev/accel/accel0" # for NPU 
+      - "/dev/dri:/dev/dri" # for GPU
+    group_add:
+      - $VIDEO_GROUPID 
+      - $RENDER_GROUPID
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw # gui
+      - /dev/bus/usb:/dev/bus/usb # for usb access, depends where its located
+      - ./cv_ws:/home/ubuntu/cv_ws
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+    command: sleep infinity
+
