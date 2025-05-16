@@ -60,7 +60,7 @@ This will download the model to `opencv_ws/models/yolo_nas_s.onnx`.
 
 > __NOTE__: models have a different license than this repository. The original license can be found at https://github.com/Deci-AI/super-gradients/blob/master/LICENSE.YOLONAS.md
 
-**Running the test script:**
+### Running the test script:
 
 *   **Inside the Docker Container:**
     After accessing the container's shell (e.g., via `docker exec -it opencv_dev bash`), the workspace is mounted at `/home/ubuntu/opencv_ws`.
@@ -77,7 +77,5 @@ This will download the model to `opencv_ws/models/yolo_nas_s.onnx`.
     python3 test_dnn.py --model_path models/yolo_nas_s.onnx --input_width 640 --input_height 640 --input_channels 3
     ```
 
-The generic command format is:
-```bash
-python3 test_dnn.py --model_path /path/to/model.onnx --input_width 640 --input_height 640 --input_channels 3
-```
+## Related work
+The openvino backend helps optimise deep learning inference tasks: [yolo_nas_cpp](https://github.com/MRo47/yolo_nas_cpp)
