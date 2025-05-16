@@ -4,6 +4,7 @@ services:
     stdin_open: true
     tty: true
     network_mode: host
+    container_name: opencv_dev
     devices:
       - "/dev/video0:/dev/video0" # for web cam
       - "/dev/accel/accel0:/dev/accel/accel0" # for NPU 
