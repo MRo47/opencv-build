@@ -6,6 +6,12 @@ This repository provides scripts and Dockerfiles to simplify building OpenCV 4.1
 
 A prebuilt Docker image is available at `ghcr.io/mro47/opencv-build:latest`.
 
+To pull the latest image, run the following command
+
+```bash
+docker pull ghcr.io/mro47/opencv-build:latest
+```
+
 You can use the prebuilt image in the following ways:
 
 > __NOTE__: running the image will require permissions to system hardware inside the container. Run the script in scripts/export-env.sh to generate the .env file, before using the prebuilt image.
