@@ -15,7 +15,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw # gui
       - /dev/bus/usb:/dev/bus/usb # for usb access, depends where its located
-      - ./cv_ws:/home/ubuntu/cv_ws
+      - ./opencv_ws:/home/ubuntu/opencv_ws
     environment:
       - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1

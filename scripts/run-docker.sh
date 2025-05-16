@@ -46,7 +46,7 @@ docker run \
     --group-add "$RENDER_GROUPID" \
     -v "/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     -v "/dev/bus/usb:/dev/bus/usb" \
-    -v "$(pwd)/cv_ws:/home/ubuntu/cv_ws" \
+    -v "$SCRIPT_DIR/../opencv_ws:/home/ubuntu/opencv_ws" \
     -e "DISPLAY=$DISPLAY" \
     -e "QT_X11_NO_MITSHM=1" \
     ghcr.io/mro47/opencv-build:latest \
