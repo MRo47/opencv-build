@@ -1,6 +1,6 @@
 # OpenCV Build
 
-This repository provides scripts and Dockerfiles to simplify building OpenCV 4.11.0 from source on Ubuntu 24.04. The build includes the contrib and non-free modules, and is compiled with support for OpenVINO 2025.1.0, ONNX Runtime 1.21.0, LAPACK, and TBB for enhanced performance and capabilities.
+This repository provides scripts and Dockerfiles to simplify building OpenCV from source on Ubuntu. The build includes the contrib and non-free modules, and is compiled with support for OpenVINO, ONNX Runtime, LAPACK, and TBB for enhanced performance and capabilities.
 
 ## Prebuilt Docker image
 
