@@ -1,0 +1,25 @@
+services:
+  opencv_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    tty: true
+    network_mode: host
+    container_name: opencv_dev
+    devices:
+      - "/dev/video0:/dev/video0"
+      - "/dev/accel/accel0:/dev/accel/accel0"
+      - "/dev/dri:/dev/dri"
+    group_add:
+      - "$VIDEO_GROUPID"
+      - "$RENDER_GROUPID"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev/bus/usb:/dev/bus/usb
+      - ../opencv_ws:/home/ubuntu/opencv_ws
+      - /home/$USER_NAME/.ssh:/home/ubuntu/.ssh:ro
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+    command: sleep infinity
