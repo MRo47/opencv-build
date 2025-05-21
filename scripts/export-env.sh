@@ -13,3 +13,5 @@ echo "DISPLAY=${DISPLAY}" > ${ENV_FILE}
 echo "VIDEO_GROUPID=$(getent group video | cut -d: -f3)" >> ${ENV_FILE}
 echo "RENDER_GROUPID=$(getent group render | cut -d: -f3)" >> ${ENV_FILE}
 echo "USER_NAME=${USER}" >> ${ENV_FILE}
+
+cp -f ${ENV_FILE} ${SCRIPT_DIR}/../.devcontainer/.env
