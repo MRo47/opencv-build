@@ -19,7 +19,7 @@ The timings are obtained using the C++ example yolo_nas_cpp included with the li
 
 ![benchmarks](images/benchmarks.png "OpenCV 4.11.0 inference benchmarks on yolo_nas_cpp")
 
-### Table 1: YOLO-NAS Inference Time (Milliseconds) - OpenCV 4.11.0 & OpenVINO
+### Table 1: Inference Time (Milliseconds) - Compiled OpenCV 4.11.0
 
 
 | Model              | OpenCV CPU | OpenCV OpenCL | OpenVINO CPU | OpenVINO OpenCL     |
@@ -33,7 +33,7 @@ The timings are obtained using the C++ example yolo_nas_cpp included with the li
 
 The timings for comparison in the following table are obtained using stock OpenCV 4.6.0 available on ubuntu 24.04.
 
-### Table 2: YOLO-NAS Inference Time (Milliseconds) - Stock OpenCV 4.6.0
+### Table 2: Inference Time (Milliseconds) - Stock OpenCV 4.6.0
 
 
 | Model              | OpenCV CPU | OpenCV OpenCL | OpenVINO CPU | OpenVINO OpenCL |
