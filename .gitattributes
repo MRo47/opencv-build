@@ -1,1 +1,2 @@
 opencv_ws/models/yolo_nas_s.onnx filter=lfs diff=lfs merge=lfs -text
+images/benchmarks.png filter=lfs diff=lfs merge=lfs -text

@@ -2,6 +2,53 @@
 
 This repository provides scripts and Dockerfiles to simplify building OpenCV from source on Ubuntu. The build includes the contrib and non-free modules, and is compiled with support for OpenVINO, ONNX Runtime, LAPACK, and TBB for enhanced performance and capabilities.
 
+## DNN inference benchmarks for yolo_nas_cpp
+
+- [yolo_nas_cpp](https://github.com/MRo47/yolo_nas_cpp) is my work on a C++ library for YOLO-NAS object detection. 
+The timings are obtained using the C++ example yolo_nas_cpp included with the library.
+- The columns are labeled as Backend + Target.
+    - OpenCV backend uses ONNX run time for inference.
+    - OpenCL target means its running on the iGPU (integrated GPU).
+- The timings are obtained as an average over 100 frames.
+- System setup details:
+    - System: Docker running on Fedora 41 (workstation)
+    - CPU: Intel® Core™ Ultra 9 185H × 22
+    - iGPU: Intel® Arc™ graphics
+    - Memory: 32GB
+    - Video frame size: 1280x720
+
+![benchmarks](images/benchmarks.png "OpenCV 4.11.0 inference benchmarks on yolo_nas_cpp")
+
+### Table 1: Inference Time (Milliseconds) - Compiled OpenCV 4.11.0
+
+
+| Model              | OpenCV CPU | OpenCV OpenCL | OpenVINO CPU | OpenVINO OpenCL     |
+|--------------------|:----------:|:-------------:|:------------:|:-------------------:|
+| **yolo-nas-s**     |   72.36    |     69.04     |    75.96     |      **22.99**      |
+| **yolo-nas-s-int8**|   89.14    |    112.65     |    30.35     |      **14.82**      |
+| **yolo-nas-m**     |  131.90    |    125.38     |   209.79     |      **39.67**      |
+| **yolo-nas-m-int8**|  159.31    |    193.09     |    57.50     |      **24.72**      |
+
+---
+
+The timings for comparison in the following table are obtained using stock OpenCV 4.6.0 available on ubuntu 24.04.
+
+### Table 2: Inference Time (Milliseconds) - Stock OpenCV 4.6.0
+
+
+| Model              | OpenCV CPU | OpenCV OpenCL | OpenVINO CPU | OpenVINO OpenCL |
+|--------------------|:----------:|:-------------:|:------------:|:---------------:|
+| **yolo-nas-s**     |   85.43    |     N/A¹      |     N/A³     |      N/A³       |
+| **yolo-nas-s-int8**|   N/A²     |     N/A²      |     N/A³     |      N/A³       |
+| **yolo-nas-m**     |   237.85   |     N/A¹      |     N/A³     |      N/A³       |
+| **yolo-nas-m-int8**|   N/A²     |     N/A²      |     N/A³     |      N/A³       |
+---
+
+**Notes for Table 2:**
+- ¹ N/A: OpenCL backend not available.
+- ² N/A: Quantized models (INT8) are not supported by stock OpenCV 4.6.0 on ONNX backend.
+- ³ N/A: OpenVINO backend not available/not tested for this OpenCV 4.6.0 setup.
+
 ## Prebuilt Docker image
 
 A prebuilt Docker image is available at `ghcr.io/mro47/opencv-build:latest`.
@@ -81,5 +128,5 @@ This will download the model to `opencv_ws/models/yolo_nas_s.onnx`.
     python3 test_dnn.py --model_path models/yolo_nas_s.onnx --input_width 640 --input_height 640 --input_channels 3
     ```
 
-## Related work
-The openvino backend helps optimise deep learning inference tasks: [yolo_nas_cpp](https://github.com/MRo47/yolo_nas_cpp)
+
+
