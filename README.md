@@ -43,6 +43,10 @@ Run the script, which will drop user into the container's shell
 bash scripts/run-docker.sh
 ```
 
+### 3. Devcontainer
+
+Devcontainer config files are provided in the `.devcontainer` directory to run this as a development container. These can be used with the `Dev Containers` extension in VSCode. Make sure to run the export script `scripts/export-env.sh` to generate the `.env` file before using the devcontainer.
+
 ## Build from source
 
 To build OpenCV from source along with its dependencies, you can use the convenience script `scripts/build-opencv.sh`. This script automates the entire build process as defined in the Dockerfile and installs dependencies but runs it on your host machine.
