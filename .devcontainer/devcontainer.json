@@ -1,0 +1,15 @@
+{
+  "name": "opencv-dev",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "opencv_dev",
+  "workspaceFolder": "/home/ubuntu/opencv_ws",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cmake-tools", 
+        "ms-vscode.cpptools",
+        "mhutchie.git-graph"
+      ]
+    }
+  }
+}

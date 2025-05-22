@@ -1,0 +1,27 @@
+FROM ghcr.io/mro47/opencv-build:latest
+
+USER root
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    wget \
+    curl \
+    git \
+    gdb \
+    python3-pip \
+    python-is-python3 \
+    python3-virtualenv \
+    libeigen3-dev \
+    libyaml-cpp-dev \
+    nlohmann-json3-dev \
+    clang-format \
+    git-lfs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER ubuntu
+
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.1/zsh-in-docker.sh)" -- \
+    -t robbyrussell \
+    -p git \
+    -p sudo
