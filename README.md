@@ -2,7 +2,7 @@
 
 This repository provides scripts and Dockerfiles to simplify building OpenCV from source on Ubuntu. The build includes the contrib and non-free modules, and is compiled with support for OpenVINO, ONNX Runtime, LAPACK, and TBB for enhanced performance and capabilities.
 
-## OpenCV DNN inference benchmarks for yolo_nas_cpp
+## DNN inference benchmarks for yolo_nas_cpp
 
 - [yolo_nas_cpp](https://github.com/MRo47/yolo_nas_cpp) is my work on a C++ library for YOLO-NAS object detection. 
 The timings are obtained using the C++ example yolo_nas_cpp included with the library.
