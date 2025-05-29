@@ -14,6 +14,7 @@ The timings are obtained using the C++ example yolo_nas_cpp included with the li
     - System: Docker running on Fedora 41 (workstation)
     - CPU: Intel® Core™ Ultra 9 185H × 22
     - iGPU: Intel® Arc™ graphics
+    - NPU: Intel® AI Boost
     - Memory: 32GB
     - Video frame size: 1280x720
 
@@ -21,13 +22,14 @@ The timings are obtained using the C++ example yolo_nas_cpp included with the li
 
 ### Table 1: Inference Time (Milliseconds) - Compiled OpenCV 4.11.0
 
+The NPU benchmark is obtained using OpenCV 4.x branch, not available on 4.11.0 but should be available from OpenCV 4.12 onwards.
 
-| Model              | OpenCV CPU | OpenCV OpenCL | OpenVINO CPU | OpenVINO OpenCL     |
-|--------------------|:----------:|:-------------:|:------------:|:-------------------:|
-| **yolo-nas-s**     |   72.36    |     69.04     |    75.96     |      **22.99**      |
-| **yolo-nas-s-int8**|   89.14    |    112.65     |    30.35     |      **14.82**      |
-| **yolo-nas-m**     |  131.90    |    125.38     |   209.79     |      **39.67**      |
-| **yolo-nas-m-int8**|  159.31    |    193.09     |    57.50     |      **24.72**      |
+| Model              | OpenCV CPU | OpenCV OpenCL | OpenVINO CPU | OpenVINO OpenCL     | OpenVINO NPU (OpenCV 4.x) |
+|--------------------|:----------:|:-------------:|:------------:|:-------------------:|:-------------------------:|
+| **yolo-nas-s**     |   72.36    |     69.04     |    75.96     |      **22.99**      |           42.98           |
+| **yolo-nas-s-int8**|   89.14    |    112.65     |    30.35     |      **14.82**      |           28.63           |
+| **yolo-nas-m**     |  131.90    |    125.38     |   209.79     |      **39.67**      |           71.08           |
+| **yolo-nas-m-int8**|  159.31    |    193.09     |    57.50     |      **24.72**      |           43.93           |
 
 ---
 
